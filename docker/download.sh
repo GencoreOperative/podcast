@@ -16,7 +16,7 @@ if [ ! -f "$RSS_FILE" ]; then
 fi
 
 # Get the episode title for the given episode number
-EPISODE_TITLE=$(bash /list.sh | grep ^"$EPISODE_NUM" | cut -d '-' -f 2)
+EPISODE_TITLE=$(bash /list.sh | grep -E "^\b$EPISODE_NUM\b" | cut -d '-' -f 2)
 
 # Check if an episode was found
 if [ -z "$EPISODE_TITLE" ]; then
