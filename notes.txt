@@ -1,0 +1,86 @@
+The user will provide an RSS feed URL to the application.
+The application will provide two ways to interact with the RSS feed.
+
+List Mode:
+First, if no other arguments are provided, will list the episodes available in the podcast.
+These will be organised as: Episode Number, Release Date, Title
+
+Download Mode:
+Second, if they provide a comma seperated list of episodes, will download the requested episodes to the local folder. If the user provides '-' then all episodes will be downloaded.
+
+Design
+---
+The application download the RSS file locally so that subsequent processing can be simplified.
+Because we are working with Docker, we need to pre-create the file names on the local file system.
+This means we need to have a processing script that is capable.
+
+The simplest idea I have is to operate with a fixed naming convention.
+For example "download".
+If we download the podcast to this file name, and then move it afterwards, then that allows us a way of pre-creating the file with the user's permissions.
+
+
+
+
+/usr/local/bin/podcast-dl --url "https://example.com/rss" --episode-template "{{release_date}}_{{title | replace(' ', '_')}}"
+
+
+TODO - we need to pre-touch the files it will download.
+Two passes - first, work out the file names, second download the files
+
+TODO - map the PWD to the /podcast/ folder for the run command.
+
+docker run -v $PWD:/podcasts --rm $(docker build -q .) --url https://pod.link/1736984532.rss
+
+
+$ docker run --rm $(docker build -q .) --url https://pod.link/1736984532.rss
+The Conversation's Curious Kids
+<p dir="ltr">Kids ask the coolest questions! And on The Conversation’s Curious Kids, we get the brainiest people we can to answer them! </p>
+<p dir="ltr">Every week, a curious kid joins host Eloise to ask the world’s top researchers their burning question – whether it’s about space, dinosaurs, trees or even why their dog is just sooooo cute.</p>
+<p dir="ltr">A podcast from <a href="https://theconversation.com/">The Conversation</a>, the independent website that brings you news straight from scientists and scholars, in partnership with <a href="https://www.funkidslive.com/">Fun Kids</a>.</p>
+<p dir="ltr"><strong>Email your questions to <a href="mailto:curiouskids@theconversation.com">curiouskids@theconversation.com</a> or record it on your phone and send it to us directly <a href="https://funkidslive.com/curious">https://funkidslive.com/curious</a></strong></p>
+
+/podcast/The Conversation's Curious Kids does not exist. Creating...
+
+Starting download of 9 episodes
+
+Does magic really exist? | Starting download of 17.95 MB...
+Does magic really exist? | Download complete!
+Can chameleons change colour in their sleep? | Starting download of 19.21 MB...
+Can chameleons change colour in their sleep? | Download complete!
+If an asteroid hit Earth, and all the humans died, would the dinosaurs come back? | Starting download of 17.78 MB...
+If an asteroid hit Earth, and all the humans died, would the dinosaurs come back? | Download complete!
+Why is my dog so cute? | Starting download of 18.02 MB...
+Why is my dog so cute? | Download complete!
+Why do some trees lose their leaves and others don't? | Starting download of 15.93 MB...
+Why do some trees lose their leaves and others don't? | Download complete!
+What is energy made of? | Starting download of 12.21 MB...
+What is energy made of? | Download complete!
+How high can I jump on the Moon? | Starting download of 14.50 MB...
+How high can I jump on the Moon? | Download complete!
+Do whales sneeze? | Starting download of 11.43 MB...
+Do whales sneeze? | Download complete!
+Welcome to The Conversation's Curious Kids | Starting download of 2.40 MB...
+Welcome to The Conversation's Curious Kids | Download complete!
+
+Successfully downloaded 9 episodes
+
+
+$ docker run --rm $(docker build -q .) --url https://pod.link/1736984532.rss --list
+┌─────────┬────────────┬─────────────────────────────────────────────────────────────────────────────────────┬───────────────────────────────────┐
+│ (index) │ episodeNum │                                        title                                        │              pubDate              │
+├─────────┼────────────┼─────────────────────────────────────────────────────────────────────────────────────┼───────────────────────────────────┤
+│    0    │     9      │                             'Does magic really exist?'                              │ 'Sat, 08 Jun 2024 23:01:00 +0000' │
+│    1    │     8      │                   'Can chameleons change colour in their sleep?'                    │ 'Sat, 01 Jun 2024 23:01:00 +0000' │
+│    2    │     7      │ 'If an asteroid hit Earth, and all the humans died, would the dinosaurs come back?' │ 'Sat, 25 May 2024 23:01:00 +0000' │
+│    3    │     6      │                              'Why is my dog so cute?'                               │ 'Sat, 18 May 2024 23:01:00 +0000' │
+│    4    │     5      │               "Why do some trees lose their leaves and others don't?"               │ 'Sat, 11 May 2024 23:01:00 +0000' │
+│    5    │     4      │                              'What is energy made of?'                              │ 'Sat, 04 May 2024 23:01:00 +0000' │
+│    6    │     3      │                         'How high can I jump on the Moon?'                          │ 'Sat, 27 Apr 2024 23:01:00 +0000' │
+│    7    │     2      │                                 'Do whales sneeze?'                                 │ 'Sat, 20 Apr 2024 23:01:00 +0000' │
+│    8    │     1      │                    "Welcome to The Conversation's Curious Kids"                     │ 'Wed, 20 Mar 2024 12:25:40 +0000' │
+└─────────┴────────────┴─────────────────────────────────────────────────────────────────────────────────────┴───────────────────────────────────┘
+robert@robert-Precision-5550:~/tmp/rss$ docker run --rm $(docker build -q .) --url https://pod.link/1736984532.rss --table
+error: unknown option '--table'
+robert@robert-Precision-5550:~/tmp/rss$ docker run --rm $(docker build -q .) --url https://pod.link/1736984532.rss --list json
+[{"episodeNum":9,"title":"Does magic really exist?","pubDate":"Sat, 08 Jun 2024 23:01:00 +0000"},{"episodeNum":8,"title":"Can chameleons change colour in their sleep?","pubDate":"Sat, 01 Jun 2024 23:01:00 +0000"},{"episodeNum":7,"title":"If an asteroid hit Earth, and all the humans died, would the dinosaurs come back?","pubDate":"Sat, 25 May 2024 23:01:00 +0000"},{"episodeNum":6,"title":"Why is my dog so cute?","pubDate":"Sat, 18 May 2024 23:01:00 +0000"},{"episodeNum":5,"title":"Why do some trees lose their leaves and others don't?","pubDate":"Sat, 11 May 2024 23:01:00 +0000"},{"episodeNum":4,"title":"What is energy made of?","pubDate":"Sat, 04 May 2024 23:01:00 +0000"},{"episodeNum":3,"title":"How high can I jump on the Moon?","pubDate":"Sat, 27 Apr 2024 23:01:00 +0000"},{"episodeNum":2,"title":"Do whales sneeze?","pubDate":"Sat, 20 Apr 2024 23:01:00 +0000"},{"episodeNum":1,"title":"Welcome to The Conversation's Curious Kids","pubDate":"Wed, 20 Mar 2024 12:25:40 +0000"}]
+

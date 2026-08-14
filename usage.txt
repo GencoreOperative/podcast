@@ -1,0 +1,37 @@
+Usage: podcast-dl-10.3.2 [options]
+
+Options:
+  --url <string>                                   url to podcast rss feed
+  --file <path>                                    local path to podcast rss feed
+  --out-dir <path>                                 specify output directory (default: "./{{podcast_title}}")
+  --archive [path]                                 download or write only items not listed in archive file
+  --episode-template <string>                      template for generating episode related filenames (default: "{{release_date}}-{{title}}")
+  --episode-custom-template-options <patterns...>  create custom options for the episode template
+  --episode-digits <number>                        minimum number of digits to use for episode numbering (leading zeros) (default: 1)
+  --episode-num-offset <number>                    offset the acquired episode number (default: 0)
+  --episode-source-order <string>                  attempted order to extract episode audio URL from rss feed (default: ["enclosure","link"])
+  --include-meta                                   write out podcast metadata to json
+  --include-episode-meta                           write out individual episode metadata to json
+  --include-episode-transcripts                    download found episode transcripts
+  --episode-transcript-types <string>              list of allowed transcript types in preferred order (default:
+                                                   ["application/json","application/x-subrip","application/srr","application/srt","text/vtt","text/html","text/plain"])
+  --include-episode-images                         download found episode images
+  --offset <number>                                offset episode to start downloading from (most recent = 0) (default: 0)
+  --limit <number>                                 max amount of episodes to download
+  --episode-regex <string>                         match episode title against regex before downloading
+  --after <string>                                 download episodes only after this date (inclusive)
+  --before <string>                                download episodes only before this date (inclusive)
+  --add-mp3-metadata                               attempts to add a base level of metadata to episode files using ffmpeg
+  --adjust-bitrate <string>                        attempts to adjust bitrate of episode files using ffmpeg
+  --mono                                           attempts to force episode files into mono using ffmpeg
+  --override                                       override local files on collision
+  --always-postprocess                             always run additional tasks on the file regardless if the file already exists
+  --reverse                                        download episodes in reverse order
+  --info                                           print retrieved podcast info instead of downloading
+  --list [table|json]                              print episode info instead of downloading
+  --exec <string>                                  Execute a command after each episode is downloaded
+  --threads <number>                               the number of downloads that can happen concurrently (default: 1)
+  --attempts <number>                              the number of attempts for an individual download (default: 3)
+  --parser-config <string>                         path to JSON config to override RSS parser
+  --proxy                                          enable proxy support via global-agent
+  -h, --help                                       display help for command

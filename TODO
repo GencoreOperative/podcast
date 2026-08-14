@@ -1,0 +1,8 @@
+This RSS feed fails to process, why?
+https://feeds.simplecast.com/XA_851k3
+
+Add a debug mode so that we can see what is going wrong.
+
+Experience was really poor - I need to provide a link, it should follow the link until it gets to an RSS content.
+Then processing that content and list the episodes.
+https://link.chtbl.com/todayexplainedpod?id=todayexplainedpod&platform=rss
