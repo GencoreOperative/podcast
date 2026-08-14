@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Argument validation:
-# The first argument must be a URL
-# The second argument is optional, but if provided, must be a number.
-
 # Check if at least one argument is provided
 if [ "$#" -lt 1 ]; then
-    echo "Usage: $0 <URL> [number]"
-    echo "Example: $0 https://example.com/rss 5"
+    echo "Usage:"
+    echo "  $0 <URL>                    - List all episodes in the RSS Feed"
+    echo "  $0 <URL> <episode-number>   - Download a specific episode by number"
     exit 1
 fi
 
