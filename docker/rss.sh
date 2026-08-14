@@ -9,8 +9,5 @@ FILE="rss"
 # Check if the file exists
 if [ ! -s "$FILE" ]; then
     # Download the RSS file from the provided URL
-    curl -s -o "$FILE" -L "$1"
-    
-    # Exit if the download fails
-    [[ $? -ne 0 ]] && echo "Download has failed" && exit 1
+    curl -f -s -o "$FILE" -L "$1"
 fi

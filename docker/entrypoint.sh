@@ -18,6 +18,10 @@ fi
 # Assign the first argument to a variable
 URL="$1"
 bash /rss.sh "$URL"
+if [[ $? -ne 0 ]]; then
+    echo "Failed to read RSS Feed: $URL"
+    exit 1
+fi
 
 # Validate the second argument, if provided, is a number
 if [ "$#" -ge 2 ]; then
