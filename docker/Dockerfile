@@ -18,6 +18,6 @@ RUN curl -Lf https://github.com/lightpohl/podcast-dl/releases/download/v12.1.0/p
 # Set the working directory inside the container
 WORKDIR /podcast
 
-ADD download.sh rss.sh list.sh entrypoint.sh /
+ADD range.sh download.sh rss.sh list.sh entrypoint.sh /
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh" ]
