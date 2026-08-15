@@ -1,11 +1,77 @@
 #!/bin/bash
 set -e
 
-# Check if at least one argument is provided
-if [ "$#" -lt 1 ]; then
-    echo "Usage: ./podcast <URL> [episode-number]"
-    echo "Example: ./podcast https://example.com/rss 5"
-    exit 1
+# Parse arguments using getopts
+while getopts ":dr:f:" opt; do
+    case $opt in
+        d)
+            DEBUG="true"
+            ;;
+        r)
+            RSS_URL="$OPTARG"
+            ;;
+        f)
+            RSS_FILE="$OPTARG"
+            ;;
+        \?)
+            echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+# Check if we have remaining arguments (episode args)
+if [ $# -gt 0 ]; then
+    EPI_START="$1"
+    EPI_END="${2:-}"
 fi
 
-docker run -v "$PWD:/podcast" --rm podcast-dl:latest "$@"
+
+# -----------------
+# Argument Assembly
+# -----------------
+# Assemble the arguments based on how we intend to use them
+
+if [ -n "RSS_FILE" ]; then
+    ARGS=("cat")
+    ARGS+=("$RSS_FILE")
+    ARGS+=("|")
+    ARGS+=("docker")
+else
+    ARGS=("docker")
+fi
+
+ARGS+=("run")
+ARGS+=("--rm")
+ARGS+=("-i")
+ARGS+=("podcast-dl:latest")
+
+if [ -n "$DEBUG" ]; then
+    ARGS+=("-d")
+fi
+
+if [ -n "$RSS_URL" ]; then
+    ARGS+=("-r")
+    ARGS+=("$RSS_URL")
+fi
+
+TAR=
+if [ -n "$EPI_START" ]; then
+    ARGS+=("$EPI_START")
+    TAR=true
+fi
+
+if [ -n "$EPI_END" ]; then
+    ARGS+=("$EPI_END")
+    TAR=true
+fi
+
+if [ -n "$TAR" ]; then
+    ARGS+=("|")
+    ARGS+=("tar")
+    ARGS+=("-xvf")
+    ARGS+=("-")
+fi
+
+eval ${ARGS[@]}
