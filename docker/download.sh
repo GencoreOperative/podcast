@@ -16,7 +16,7 @@ if [ ! -f "$RSS_FILE" ]; then
 fi
 
 # Get the episode title for the given episode number
-EPISODE_TITLE=$(bash /list.sh | grep -E "^\b$EPISODE_NUM\b" | cut -d '-' -f 2)
+EPISODE_TITLE=$(bash list.sh | grep -E "^\b$EPISODE_NUM\b" | cut -d '-' -f 2)
 
 # Check if an episode was found
 if [ -z "$EPISODE_TITLE" ]; then
@@ -28,11 +28,12 @@ fi
 ESCAPED_TITLE=$(echo "$EPISODE_TITLE" | sed 's/[\/&?()]/\\&/g')
 
 # Use the episode-regex option to download the episode
+# We need to redirect the output to STDERR to ensure we do not output on STDOUT
 podcast-dl --file "$RSS_FILE" \
     --episode-regex "$ESCAPED_TITLE" \
     --out-dir "/tmp" \
     --episode-template "download" \
-    --override
+    --override > /dev/null
 
 # Check if the download succeeded
 if [ $? -ne 0 ]; then
@@ -40,7 +41,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "Successfully downloaded episode '$EPISODE_TITLE'."
 if [ -f /tmp/download.mp3 ]; then
     cp /tmp/download.mp3 download.mp3
 elif [ -f /tmp/download.m4a ]; then
@@ -51,3 +51,5 @@ else
     echo "Did not recognise the downloaded file type."
     ls -las /tmp
 fi
+
+mv download.mp3 "$EPISODE_NUM-$EPISODE_TITLE.mp3"
