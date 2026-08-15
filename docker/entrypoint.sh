@@ -53,48 +53,17 @@ fi
 
 # If no episode arguments provided, list episodes
 if [ -z "$EPI_ARGS" ]; then
-    bash $DEBUG /list.sh
+    bash $DEBUG list.sh
     exit 0
 fi
 
-exit
-
-# Check if RSS_URL was provided or if we're in STDIN mode
-if [ -z "$RSS_URL" ]; then
-    # STDIN mode
-    RSS_URL=$(cat)
-    if [ -z "$RSS_URL" ]; then
-        echo "Usage:"
-        echo "  $0 [-d|--debug] [-r|--rss <URL>] [episodes]   - URL mode"
-        echo "  $0 [-d|--debug]                                - STDIN mode (pipe RSS XML)"
-        exit 1
-    fi
-else
-    # URL mode - check if RSS_URL looks like a URL (starts with http/https)
-    if [[ "$RSS_URL" != http* ]]; then
-        echo "Usage:"
-        echo "  $0 [-d|--debug] [-r|--rss <URL>] [episodes]   - URL mode"
-        echo "  $0 [-d|--debug]                                - STDIN mode (pipe RSS XML)"
-        exit 1
-    fi
-fi
-
-# Fetch and store RSS feed
-bash $DEBUG /rss.sh "$RSS_URL"
-
-if [[ $? -ne 0 ]]; then
-    echo "Failed to read RSS Feed: $RSS_URL"
-    exit 1
-fi
-
-# If no episode arguments provided, list episodes
-if [ $# -eq 0 ]; then
-    bash $DEBUG /list.sh
-    exit 0
-fi
+# ------------
+# Episode Mode
+# ------------
+# Otherwise, we are processing a specific set of episodes.
 
 # Expand episode arguments (ranges and comma-separated lists)
-EPI_LIST=$(bash $DEBUG /range.sh "$EPI_ARGS")
+EPI_LIST=$(bash $DEBUG range.sh "$EPI_ARGS")
 
 if [ -z "$EPI_LIST" ]; then
     echo "Error: No valid episode numbers provided"
