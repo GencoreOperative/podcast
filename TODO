@@ -1,8 +1,20 @@
+No Volume Mount
+---
+We can convert the design to not use a volume mount by making the STDOUT the piped audio file.
+
+We can download the RSS and use it for testing etc by allowing it to be provided on STDIN.
+
+Lastly, we can move the seq logic from inside the docker image to outside in the podcast script.
+
+Debugging
+---
 This RSS feed fails to process, why?
 https://feeds.simplecast.com/XA_851k3
-
-Add a debug mode so that we can see what is going wrong.
 
 Experience was really poor - I need to provide a link, it should follow the link until it gets to an RSS content.
 Then processing that content and list the episodes.
 https://link.chtbl.com/todayexplainedpod?id=todayexplainedpod&platform=rss
+
+Done
+---
+Add a debug mode so that we can see what is going wrong.
