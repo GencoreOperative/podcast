@@ -10,6 +10,7 @@ while getopts ":dr:" opt; do
     case $opt in
         d)
             DEBUG="-x"
+            set -x
             ;;
         r)
             RSS_URL="$OPTARG"
